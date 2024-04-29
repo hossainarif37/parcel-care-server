@@ -1,8 +1,11 @@
 import { NextFunction, Request, Response } from "express";
 
-const express = require('express');
-const cors = require('cors');
-require('dotenv').config();
+import express from 'express';
+import cors from 'cors';
+import 'dotenv/config';
+
+import './config/database'
+
 
 const app = express();
 
@@ -24,7 +27,7 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 })
 
 //* server error
-const errorHandler = require('./errorHandlers/errorHandler');
+import errorHandler from "./errorHandlers/errorHandler";
 app.use(errorHandler);
 
 
