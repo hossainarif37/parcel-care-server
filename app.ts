@@ -3,6 +3,7 @@ import { NextFunction, Request, Response } from "express";
 import express from 'express';
 import cors from 'cors';
 import 'dotenv/config';
+import authRoutes from "./routes/auth.routes"
 
 import './config/database'
 
@@ -20,6 +21,8 @@ app.get('/', (req: Request, res: Response) => {
     res.send('Welcome to TechConnect Community server')
 })
 
+//* API Routes
+app.use('/api/v1/auth', authRoutes);
 
 //* route not  found
 app.use((req: Request, res: Response, next: NextFunction) => {
