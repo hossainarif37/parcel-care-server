@@ -1,5 +1,5 @@
 import express from "express"
-import { registerUser } from "../controllers/auth.controller";
+import { loginUser, registerUser } from "../controllers/auth.controller";
 const router = express.Router();
 
 router
@@ -19,6 +19,20 @@ router
      */
     .post('/register', registerUser)
 
-
+    //* User Login Route
+    /**
+     * @route POST /api/auth/login
+     * @description User Login.
+     * @access Public
+     * 
+     * @params email, password
+     * 
+     * @returns {object} - Registration status and message
+     * 
+     * @throws {400} If there are validation errors in the request body
+     * @throws {401} If there are wrong password errors
+     * @throws {404} If the user not exist
+     */
+    .post('/login', loginUser)
 
 export default router;
