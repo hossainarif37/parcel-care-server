@@ -7,10 +7,13 @@ const errorHandler = (err: any, req: Request, res: Response, next: NextFunction)
     else if (err.name === 'CastError') {
         return res.status(400).json({ error: err.message })
     }
+
+    console.log(err.message);
+
     res.status(500).json({
         success: false,
         message: 'Internal server error!'
     })
 }
 
-module.exports = errorHandler;
+export default errorHandler;
