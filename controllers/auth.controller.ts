@@ -72,8 +72,6 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
             email: user.email
         }
 
-
-
         bcrypt.compare(password, user.password, function (err: any, result: any) {
             if (result) {
                 //* Generate jwt token

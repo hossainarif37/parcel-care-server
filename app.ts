@@ -4,8 +4,10 @@ import express from 'express';
 import cors from 'cors';
 import 'dotenv/config';
 import authRoutes from "./routes/auth.routes"
+import userRoutes from "./routes/user.routes"
 
 import './config/database'
+import './config/passport'
 
 
 const app = express();
@@ -23,6 +25,7 @@ app.get('/', (req: Request, res: Response) => {
 
 //* API Routes
 app.use('/api/v1/auth', authRoutes);
+app.use('/api/v1/users', userRoutes);
 
 //* route not  found
 app.use((req: Request, res: Response, next: NextFunction) => {
