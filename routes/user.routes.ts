@@ -1,5 +1,5 @@
 import express from "express"
-import { getCurrentUser, getUserProfile } from "../controllers/user.controller";
+import { getCurrentUser, getUserById, updateUserInfo } from "../controllers/user.controller";
 import { checkAuth } from "../middleware/authorization";
 const router = express.Router();
 
@@ -32,7 +32,9 @@ router
     * @throws {404} If the user is not found.
     * @throws {500} If there's an internal server error.
     */
-    .get('/:userId/profile', checkAuth, getUserProfile)
+    .get('/:userId/profile', checkAuth, getUserById)
+
+    .put('/:userId/profile', checkAuth, updateUserInfo)
 
 
 
