@@ -73,22 +73,16 @@ export const updateUserInfo = async (req: Request, res: Response, next: NextFunc
 // Controller to get users by role
 export const getUsersByRole = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        // Extract role from request parameters
         const { role } = req.query;
-
-        // Query the database for users with the specified role
         const users = await User.find({ role: role });
 
         // Check if users were found
         if (users.length > 0) {
-            // Return the users in the response
             return res.status(200).json({ success: true, users });
         } else {
-            // Return a message if no users were found
             return res.status(404).json({ success: false, message: 'No users found with the specified role.' });
         }
     } catch (error) {
-        // Pass the error to the error handling middleware
         next(error);
     }
 };
