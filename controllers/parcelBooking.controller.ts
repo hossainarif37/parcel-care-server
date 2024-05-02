@@ -27,3 +27,16 @@ export const bookAParcel = async (req: Request, res: Response, next: NextFunctio
         next(error);
     }
 };
+
+export const getAllBookedParcels = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        // Fetch all parcel documents from the database
+        const parcels = await Parcel.find({});
+
+        // Return the parcels in the response
+        return res.status(200).json({ success: true, parcels });
+    } catch (error) {
+        console.log('getAllBookedParcels error', error);
+        next(error);
+    }
+};
