@@ -52,7 +52,6 @@ export const updateUserInfo = async (req: Request, res: Response, next: NextFunc
             await user.save();
             return res.status(200).json({ success: true, message: 'User info updated successfully', user });
         }
-
         // Update user role
         if (role) {
             if ((req.user as IUser).role === 'admin') {

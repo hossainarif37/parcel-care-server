@@ -1,3 +1,5 @@
+import { Types } from "mongoose";
+
 // User Interface
 export interface IUser extends Document {
     _id: string;
@@ -8,3 +10,21 @@ export interface IUser extends Document {
     profilePicture?: string;
 }
 
+export interface IParcel extends Document {
+    userId: Types.ObjectId;
+    name: string;
+    email: string;
+    phoneNumber: string;
+    parcelType: string;
+    parcelWeight: number;
+    receiverName: string;
+    receiverPhoneNumber: string;
+    deliveryAddress: string;
+    requestedDeliveryDate: Date;
+    deliveryAddressLatitude: number;
+    deliveryAddressLongitude: number;
+    price: number;
+    bookingStatus: 'pending' | 'on the way' | 'delivered' | 'returned' | 'cancelled';
+    deliveryMenId?: Types.ObjectId;
+    bookingDate: Date;
+}
