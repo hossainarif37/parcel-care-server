@@ -40,3 +40,21 @@ export const getAllBookedParcels = async (req: Request, res: Response, next: Nex
         next(error);
     }
 };
+
+
+export const getBookedParcelsByUserId = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const userId = req.params.userId;
+        const parcels = await Parcel.find({ userId: userId });
+
+        // Check if any parcels were found
+        if (parcels.length === 0) {
+            return res.status(404).json({ success: false, message: "No parcels found for this user." });
+        }
+
+        return res.status(200).json({ success: true, message: "Parcels fetched successfully.", parcels });
+    } catch (error) {
+        console.log('getBookedParcelsByUserId Error: ', error);
+        next(error);
+    }
+}
