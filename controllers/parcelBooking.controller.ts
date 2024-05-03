@@ -95,3 +95,28 @@ export const updateParcelInfo = async (req: Request, res: Response, next: NextFu
         next(error);
     }
 };
+
+export const getAssignedParcelsByDeliveryManId = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        // Extract deliveryManId from the request parameters
+        const deliveryManId = req.params.deliveryManId;
+
+        // Check if the request is made by the delivery man or an admin
+        if ((req.user as IUser).role !== "delivery-man" && (req.user as IUser).role !== "admin") {
+            return res.status(403).json({ success: false, message: "Only delivery man or admin is allowed to access this route." });
+        }
+
+        // Fetch all parcels assigned to the delivery man
+        const parcels = await Parcel.find({ deliveryManId: deliveryManId });
+
+        // Check if any parcels were found
+        if (parcels.length === 0) {
+            return res.status(404).json({ success: false, message: "No parcels found for this delivery man." });
+        }
+
+        return res.status(200).json({ success: true, message: "Parcels fetched successfully.", parcels });
+    } catch (error) {
+        console.log('getAssignedParcelsByDeliveryManId Error: ', (error as Error).message);
+        next(error);
+    }
+};
