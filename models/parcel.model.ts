@@ -17,7 +17,7 @@ const parcelSchema: Schema = new Schema({
     deliveryAddressLongitude: { type: Number, required: true },
     price: { type: Number, required: true },
     bookingStatus: { type: String, enum: ['pending', 'on the way', 'delivered', 'returned', 'cancelled'], default: 'pending' },
-    deliveryMenId: { type: Schema.Types.ObjectId, ref: 'User' },
+    deliveryManId: { type: Schema.Types.ObjectId, ref: 'User' },
     bookingDate: { type: Date, default: Date.now }
 });
 
