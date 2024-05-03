@@ -41,7 +41,6 @@ export const getAllBookedParcels = async (req: Request, res: Response, next: Nex
     }
 };
 
-
 export const getBookedParcelsByUserId = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const userId = req.params.userId;
@@ -58,3 +57,41 @@ export const getBookedParcelsByUserId = async (req: Request, res: Response, next
         next(error);
     }
 }
+
+// Update the updateParcelInfo function in parcelBooking.controller.ts
+
+export const updateParcelInfo = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const parcelId = req.params.parcelId;
+        const updates = req.body;
+
+        // Find the parcel by ID
+        const parcel = await Parcel.findById(parcelId);
+        if (!parcel) {
+            return res.status(404).json({ success: false, message: "Parcel not found." });
+        }
+
+        // Check if the booking status is 'pending'
+        if (parcel.bookingStatus !== 'pending') {
+            return res.status(400).json({ success: false, message: "Can only update parcels with 'pending' status." });
+        }
+
+        // Update the parcel information
+        for (const key in updates) {
+            if (updates.hasOwnProperty(key)) {
+                // Special handling for deliveryManId to ensure only admins can assign
+                if (key === 'deliveryManId' && (!req.user || (req.user as IUser).role !== 'admin')) {
+                    return res.status(403).json({ success: false, message: "Only admins can assign a delivery man." });
+                }
+                (parcel as any)[key] = updates[key];
+            }
+        }
+
+        // Save the updated parcel document
+        await parcel.save();
+
+        return res.status(200).json({ success: true, message: "Parcel updated successfully.", parcel });
+    } catch (error) {
+        next(error);
+    }
+};
