@@ -23,7 +23,6 @@ export const bookAParcel = async (req: Request, res: Response, next: NextFunctio
         // Return a success response
         return res.status(201).json({ success: true, message: "Parcel booked successfully.", parcel: newParcel });
     } catch (error) {
-        // Pass the error to the next middleware for error handling
         next(error);
     }
 };
