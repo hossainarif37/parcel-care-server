@@ -28,3 +28,12 @@ export interface IParcel extends Document {
     deliveryMenId?: Types.ObjectId;
     bookingDate: Date;
 }
+
+export interface IReview extends Document {
+    userId: Types.ObjectId;
+    deliveryMenId: Types.ObjectId;
+    parcelId: Types.ObjectId;
+    rating: number;
+    feedback: string;
+    reviewDate: Date;
+}
