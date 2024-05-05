@@ -40,3 +40,19 @@ export const createReviewForParcel = async (req: Request, res: Response, next: N
     }
 };
 
+// Get all reviews by delivery man’s ID
+export const getAllReviewsByDeliveryManId = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { deliveryManId } = req.params;
+
+        const reviews = await Review.find({ deliveryMenId: deliveryManId });
+
+        res.status(200).json({
+            success: true,
+            reviews
+        });
+    } catch (error) {
+        console.log('Get All Reviews By Delivery Man ID Controller: ', (error as Error).message);
+        next(error);
+    }
+};
