@@ -71,16 +71,12 @@ export const updateParcelInfo = async (req: Request, res: Response, next: NextFu
             return res.status(404).json({ success: false, message: "Parcel not found." });
         }
 
-        // Check if the booking status is 'pending'
-        if (parcel.bookingStatus !== 'pending') {
-            return res.status(400).json({ success: false, message: "Can only update parcels with 'pending' status." });
-        }
 
         // Update the parcel information
         for (const key in updates) {
             if (updates.hasOwnProperty(key)) {
                 // Special handling for deliveryManId to ensure only admins can assign
-                if (key === 'deliveryManId' && (!req.user || (req.user as IUser).role !== 'admin')) {
+                if (key === 'assignedAgentId' && (!req.user || (req.user as IUser).role !== 'admin')) {
                     return res.status(403).json({ success: false, message: "Only admins can assign a delivery man." });
                 }
                 (parcel as any)[key] = updates[key];
@@ -102,7 +98,7 @@ export const getAssignedParcelsByDeliveryManId = async (req: Request, res: Respo
         const deliveryManId = req.params.deliveryManId;
 
         // Check if the request is made by the delivery man or an admin
-        if ((req.user as IUser).role !== "delivery-man" && (req.user as IUser).role !== "admin") {
+        if ((req.user as IUser).role !== "agent" && (req.user as IUser).role !== "admin") {
             return res.status(403).json({ success: false, message: "Only delivery man or admin is allowed to access this route." });
         }
 
