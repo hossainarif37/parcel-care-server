@@ -8,7 +8,7 @@ import Parcel from "../models/parcel.model";
 // Create a review for a specific parcel after delivered
 export const createReviewForParcel = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { userId, deliveryMenId, rating, feedback } = req.body;
+        const { userId, agentId, rating, feedback } = req.body;
         const { parcelId } = req.params;
 
         // Check if the parcel has been delivered
@@ -22,7 +22,7 @@ export const createReviewForParcel = async (req: Request, res: Response, next: N
 
         const review = new Review({
             userId,
-            deliveryMenId,
+            agentId,
             parcelId,
             rating,
             feedback
@@ -40,19 +40,19 @@ export const createReviewForParcel = async (req: Request, res: Response, next: N
     }
 };
 
-// Get all reviews by delivery man’s ID
-export const getAllReviewsByDeliveryManId = async (req: Request, res: Response, next: NextFunction) => {
+// Get all reviews by agent’s ID
+export const getAllReviewsByAgentId = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { deliveryManId } = req.params;
+        const { agentId } = req.params;
 
-        const reviews = await Review.find({ deliveryMenId: deliveryManId });
+        const reviews = await Review.find({ agentId });
 
         res.status(200).json({
             success: true,
             reviews
         });
     } catch (error) {
-        console.log('Get All Reviews By Delivery Man ID Controller: ', (error as Error).message);
+        console.log('Get All Reviews By agent ID Controller: ', (error as Error).message);
         next(error);
     }
 };

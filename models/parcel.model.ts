@@ -24,9 +24,22 @@ const parcelSchema: Schema = new Schema({
     },
     requestedDeliveryDate: { type: Date, required: true },
     price: { type: Number, required: true },
-    bookingStatus: { type: String, enum: ['order_placed', 'pickup_agent_assigned', 'out_for_pickup', 'parcel_collected', 'pickup_hub_reached', 'in_transit', 'delivery_hub_reached', 'delivery_agent_assigned', 'out_for_delivery', 'delivered'], default: 'order_placed' },
+    bookingStatus: {
+        type: String,
+        enum: [
+            'Order Placed',
+            'Pickup Agent Assigned',
+            'Parcel Collected',
+            'In Transit',
+            'Delivery Hub Reached',
+            'Delivery Agent Assigned',
+            'Out For Delivery',
+            'Delivered'
+        ],
+        default: 'Order Placed'
+    },
     assignedAgentId: { type: Schema.Types.ObjectId, ref: 'User' },
-    assignedAgentRole: { type: String, enum: ['pickup', 'delivery'], default: null },
+    assignedAgentRole: { type: String, enum: ['pickup', 'delivery'] },
     bookingDate: { type: Date, default: Date.now }
 });
 
