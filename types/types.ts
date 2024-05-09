@@ -32,7 +32,7 @@ export interface IParcel extends Document {
     };
     requestedDeliveryDate: Date;
     price: number;
-    bookingStatus: 'order_placed' | 'pickup_agent_assigned' | 'out_for_pickup' | 'parcel_collected' | 'pickup_hub_reached' | 'in_transit' | 'delivery_hub_reached' | 'delivery_agent_assigned' | 'out_for_delivery' | 'delivered';
+    deliveryStatus: 'Order Confirmed' | 'Pickup Agent Assigned' | 'Parcel Collected' | 'In Transit' | 'Delivery Hub Reached' | 'Delivery Agent Assigned' | 'Out For Delivery' | 'Delivered'
     assignedAgentId?: Types.ObjectId;
     assignedAgentRole?: 'pickup' | 'delivery';
     bookingDate: Date;

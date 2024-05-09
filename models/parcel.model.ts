@@ -24,10 +24,10 @@ const parcelSchema: Schema = new Schema({
     },
     requestedDeliveryDate: { type: Date, required: true },
     price: { type: Number, required: true },
-    bookingStatus: {
+    deliveryStatus: {
         type: String,
         enum: [
-            'Order Placed',
+            'Order Confirmed',
             'Pickup Agent Assigned',
             'Parcel Collected',
             'In Transit',
