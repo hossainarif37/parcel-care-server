@@ -27,7 +27,7 @@ const parcelSchema: Schema = new Schema({
     deliveryStatus: {
         type: String,
         enum: [
-            'Order Confirmed',
+            'Order Placed',
             'Pickup Agent Assigned',
             'Parcel Collected',
             'In Transit',
