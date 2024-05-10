@@ -6,29 +6,37 @@ export interface IUser extends Document {
     name: string;
     email: string;
     password: string;
-    role: 'user' | 'delivery-man' | 'admin';
+    role: 'user' | 'agent' | 'admin';
     profilePicture?: string;
 }
 
 export interface IParcel extends Document {
-    userId: Types.ObjectId;
-    name: string;
-    email: string;
-    phoneNumber: string;
+    senderId: Types.ObjectId;
+    senderName: string;
+    senderEmail: string;
+    senderPhoneNumber: string;
+    senderAddress: {
+        fullAddress: string;
+        subDistrict: string;
+        district: string;
+    };
     parcelType: string;
     parcelWeight: number;
     receiverName: string;
+    receiverEmail: string;
     receiverPhoneNumber: string;
-    deliveryAddress: string;
+    deliveryAddress: {
+        fullAddress: string;
+        subDistrict: string;
+        district: string;
+    };
     requestedDeliveryDate: Date;
-    deliveryAddressLatitude: number;
-    deliveryAddressLongitude: number;
     price: number;
-    bookingStatus: 'pending' | 'on the way' | 'delivered' | 'returned' | 'cancelled';
-    deliveryMenId?: Types.ObjectId;
+    deliveryStatus: 'Order Placed' | 'Pickup Agent Assigned' | 'Parcel Collected' | 'In Transit' | 'Delivery Hub Reached' | 'Delivery Agent Assigned' | 'Out For Delivery' | 'Delivered'
+    assignedAgentId?: Types.ObjectId;
+    assignedAgentRole?: 'pickup' | 'delivery';
     bookingDate: Date;
 }
-
 export interface IReview extends Document {
     userId: Types.ObjectId;
     deliveryMenId: Types.ObjectId;

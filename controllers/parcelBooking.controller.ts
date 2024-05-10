@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 import { IParcel, IUser } from "../types/types";
 import Parcel from "../models/parcel.model";
+import User from "../models/user.model";
 
 export const bookAParcel = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -42,8 +43,9 @@ export const getAllBookedParcels = async (req: Request, res: Response, next: Nex
 
 export const getBookedParcelsByUserId = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const userId = req.params.userId;
-        const parcels = await Parcel.find({ userId: userId });
+        console.log('execute');
+        const senderId = req.params.userId;
+        const parcels: IParcel[] = await Parcel.find({ senderId });
 
         // Check if any parcels were found
         if (parcels.length === 0) {
@@ -58,29 +60,23 @@ export const getBookedParcelsByUserId = async (req: Request, res: Response, next
 }
 
 // Update the updateParcelInfo function in parcelBooking.controller.ts
-
 export const updateParcelInfo = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const parcelId = req.params.parcelId;
         const updates = req.body;
 
-        // Find the parcel by ID
-        const parcel = await Parcel.findById(parcelId);
+        // Find the parcel by ID and explicitly cast it to the Mongoose Document type
+        const parcel: any = await Parcel.findById(parcelId);
         if (!parcel) {
             return res.status(404).json({ success: false, message: "Parcel not found." });
-        }
-
-        // Check if the booking status is 'pending'
-        if (parcel.bookingStatus !== 'pending') {
-            return res.status(400).json({ success: false, message: "Can only update parcels with 'pending' status." });
         }
 
         // Update the parcel information
         for (const key in updates) {
             if (updates.hasOwnProperty(key)) {
-                // Special handling for deliveryManId to ensure only admins can assign
-                if (key === 'deliveryManId' && (!req.user || (req.user as IUser).role !== 'admin')) {
-                    return res.status(403).json({ success: false, message: "Only admins can assign a delivery man." });
+                // Special handling for assignedAgentId to ensure only admins can assign
+                if (key === 'assignedAgentId' && (!req.user || (req.user as IUser).role !== 'admin')) {
+                    return res.status(403).json({ success: false, message: "Only admins can assign a agent" });
                 }
                 (parcel as any)[key] = updates[key];
             }
@@ -95,27 +91,39 @@ export const updateParcelInfo = async (req: Request, res: Response, next: NextFu
     }
 };
 
-export const getAssignedParcelsByDeliveryManId = async (req: Request, res: Response, next: NextFunction) => {
+export const getAssignedParcelsByAgentIdAndRole = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        // Extract deliveryManId from the request parameters
-        const deliveryManId = req.params.deliveryManId;
+        // Extract assigned agents id
+        const assignedAgentId = req.params.agentId;
+        // Extract assignedAgentRole from the query parameters
+        const assignedAgentRole = req.query.assignedAgentRole;
 
-        // Check if the request is made by the delivery man or an admin
-        if ((req.user as IUser).role !== "delivery-man" && (req.user as IUser).role !== "admin") {
-            return res.status(403).json({ success: false, message: "Only delivery man or admin is allowed to access this route." });
+        // Perform the check in the database
+        const isAgent = await User.findOne({
+            _id: assignedAgentId,
+            role: 'agent'
+        });
+
+        if (!isAgent) {
+            return res.status(403).json({ success: false, message: "Only agent is allowed to access this route." });
         }
 
-        // Fetch all parcels assigned to the delivery man
-        const parcels = await Parcel.find({ deliveryManId: deliveryManId });
+
+
+        // Prepare the query object
+        const query: any = { assignedAgentId: assignedAgentId, assignedAgentRole };
+
+        // Fetch all parcels assigned to the agent with the specified role
+        const parcels = await Parcel.find(query);
 
         // Check if any parcels were found
         if (parcels.length === 0) {
-            return res.status(404).json({ success: false, message: "No parcels found for this delivery man." });
+            return res.status(404).json({ success: false, message: "No parcels found for this agent with the specified role." });
         }
 
         return res.status(200).json({ success: true, message: "Parcels fetched successfully.", parcels });
     } catch (error) {
-        console.log('getAssignedParcelsByDeliveryManId Error: ', (error as Error).message);
+        console.log('getAssignedParcelsByAgentId Error: ', (error as Error).message);
         next(error);
     }
 };
