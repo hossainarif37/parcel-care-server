@@ -33,6 +33,7 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
                 //* save the user
                 await newUser.save();
 
+
                 return res.status(201).json({
                     success: true,
                     message: 'User registered successfully.'
@@ -79,7 +80,7 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
                     throw new Error('JWT_SECRET_KEY is not defined in the environment variables');
                 }
 
-                const token = jwt.sign(payload, process.env.JWT_SECRET_KEY as string, { expiresIn: '1d' });
+                const token = jwt.sign(payload, process.env.JWT_SECRET_KEY as string, { expiresIn: '7d' });
                 res.status(200).send({
                     success: true,
                     message: "Login in successfully",
