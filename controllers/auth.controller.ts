@@ -80,7 +80,7 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
                     throw new Error('JWT_SECRET_KEY is not defined in the environment variables');
                 }
 
-                const token = jwt.sign(payload, process.env.JWT_SECRET_KEY as string, { expiresIn: '7d' });
+                const token = jwt.sign(payload, process.env.JWT_SECRET_KEY as string, { expiresIn: '30d' });
                 res.status(200).send({
                     success: true,
                     message: "Login in successfully",
