@@ -7,7 +7,14 @@ const userSchema: Schema = new Schema({
     email: { type: String, required: true, unique: true },
     password: { type: String, required: true },
     role: { type: String, enum: ['user', 'agent', 'admin'], default: 'user' },
-    profilePicture: { type: String }
+    profilePicture: { type: String },
+    phoneNumber: { type: Number },
+    fullAddress: { type: String },
+    subDistrict: { type: String },
+    isEmailVerified: { type: Boolean, default: false },
+    isProfileComplete: { type: Boolean, default: false },
+    district: { type: String },
+    createdAt: { type: Date, default: Date.now }
 });
 
 const User = model<IUser>('User', userSchema);
