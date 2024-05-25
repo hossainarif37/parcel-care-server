@@ -8,7 +8,15 @@ export interface IUser extends Document {
     password: string;
     role: 'user' | 'agent' | 'admin';
     profilePicture?: string;
+    phoneNumber?: number;
+    fullAddress?: string;
+    subDistrict?: string;
+    district?: string;
+    isEmailVerified?: boolean;
+    isProfileComplete?: boolean;
+    createdAt?: Date;
 }
+
 
 export interface IParcel extends Document {
     senderId: Types.ObjectId;
@@ -32,6 +40,7 @@ export interface IParcel extends Document {
     };
     requestedDeliveryDate: Date;
     price: number;
+    paymentStatus: 'pending' | 'paid';
     deliveryStatus: 'Order Placed' | 'Pickup Agent Assigned' | 'Parcel Collected' | 'In Transit' | 'Delivery Hub Reached' | 'Delivery Agent Assigned' | 'Out For Delivery' | 'Delivered'
     assignedAgentId?: Types.ObjectId;
     assignedAgentRole?: 'pickup' | 'delivery';

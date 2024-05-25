@@ -24,6 +24,7 @@ const parcelSchema: Schema = new Schema({
     },
     requestedDeliveryDate: { type: Date, required: true },
     price: { type: Number, required: true },
+    paymentStatus: { type: String, enum: ['pending', 'paid'] },
     deliveryStatus: {
         type: String,
         enum: [
