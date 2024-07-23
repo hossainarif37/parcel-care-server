@@ -1,5 +1,6 @@
 import express from "express"
-import { loginUser, registerUser } from "../controllers/auth.controller";
+import { loginUser, registerUser, updatePassword } from "../controllers/auth.controller";
+import { checkAuth } from "../middleware/authorization";
 const router = express.Router();
 
 router
@@ -34,5 +35,7 @@ router
      * @throws {404} If the user not exist
      */
     .post('/login', loginUser)
+
+    .put('/update-password', checkAuth, updatePassword)
 
 export default router;

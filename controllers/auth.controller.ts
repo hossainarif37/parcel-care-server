@@ -3,6 +3,7 @@ import User from "../models/user.model";
 import bcrypt from "bcrypt"
 import jwt from "jsonwebtoken"
 import "dotenv/config"
+import { IUser } from "../types/types";
 const saltRounds = 10;
 
 // User Registration Controller 
@@ -68,7 +69,7 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
             return res.status(404).send({ success: false, message: 'User not found' })
         }
 
-        const payload = {
+        const payload: any = {
             id: user._id,
             email: user.email
         }
@@ -98,4 +99,47 @@ export const loginUser = async (req: Request, res: Response, next: NextFunction)
         console.log('Login User Controller: ', (error as Error).message);
         next(error);
     }
+}
+
+
+// Update User Password
+export const updatePassword = async (req: Request, res: Response, next: NextFunction) => {
+    const email = (req.user as IUser).email;
+    const user = await User.findOne({ email });
+    if (!user) {
+        return res.status(404).send({ success: false, message: 'User not found' })
+    }
+
+    const { oldPassword, newPassword } = req.body;
+    if (!oldPassword || !newPassword) {
+        return res.status(404).json({ success: false, message: 'Password are missing. Provide the password as a object via body.' })
+    }
+
+    bcrypt.compare(oldPassword, user.password, function (err: any, result: any) {
+        if (result) {
+            //* hash user password
+            bcrypt.hash(newPassword, saltRounds, async function (err: any, hash: any) {
+                try {
+                    //* user info
+                    user.password = hash;
+
+                    //* save the user
+                    await user.save();
+
+
+                    return res.status(201).json({
+                        success: true,
+                        message: 'Updated the password.'
+                    })
+                } catch (error) {
+                    console.log('Update Password Controller at Bcrypt function: ', (error as Error).message);
+                    next(error)
+                }
+
+            });
+        } else {
+            res.status(401).send({ success: false, message: 'Old password is wrong! Provide correct password.' })
+        }
+    });
+
 }
