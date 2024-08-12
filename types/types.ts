@@ -28,7 +28,7 @@ export interface IParcel extends Document {
         subDistrict: string;
         district: string;
     };
-    parcelType: string;
+    parcelType: 'Document' | 'Box';
     parcelWeight: number;
     receiverName: string;
     receiverEmail: string;
@@ -40,7 +40,7 @@ export interface IParcel extends Document {
     };
     requestedDeliveryDate: Date;
     price: number;
-    paymentStatus: 'pending' | 'paid';
+    paymentStatus: 'Unpaid' | 'Paid';
     deliveryStatus: 'Order Placed' | 'Pickup Agent Assigned' | 'Parcel Collected' | 'In Transit' | 'Delivery Hub Reached' | 'Delivery Agent Assigned' | 'Out For Delivery' | 'Delivered'
     assignedAgentId?: Types.ObjectId;
     assignedAgentRole?: 'pickup' | 'delivery';

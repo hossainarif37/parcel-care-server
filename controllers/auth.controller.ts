@@ -110,12 +110,12 @@ export const updatePassword = async (req: Request, res: Response, next: NextFunc
         return res.status(404).send({ success: false, message: 'User not found' })
     }
 
-    const { oldPassword, newPassword } = req.body;
-    if (!oldPassword || !newPassword) {
+    const { currentPassword, newPassword } = req.body;
+    if (!currentPassword || !newPassword) {
         return res.status(404).json({ success: false, message: 'Password are missing. Provide the password as a object via body.' })
     }
 
-    bcrypt.compare(oldPassword, user.password, function (err: any, result: any) {
+    bcrypt.compare(currentPassword, user.password, function (err: any, result: any) {
         if (result) {
             //* hash user password
             bcrypt.hash(newPassword, saltRounds, async function (err: any, hash: any) {

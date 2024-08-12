@@ -12,7 +12,7 @@ const parcelSchema: Schema = new Schema({
         subDistrict: { type: String, required: true },
         district: { type: String, required: true }
     },
-    parcelType: { type: String, required: true },
+    parcelType: { type: String, required: true, enum: ['Document', 'Box'] },
     parcelWeight: { type: Number, required: true },
     receiverName: { type: String, required: true },
     receiverEmail: { type: String, required: true },
@@ -24,7 +24,7 @@ const parcelSchema: Schema = new Schema({
     },
     requestedDeliveryDate: { type: Date, required: true },
     price: { type: Number, required: true },
-    paymentStatus: { type: String, enum: ['pending', 'paid'] },
+    paymentStatus: { type: String, enum: ['Unpaid', 'Paid'], default: 'Unpaid' },
     deliveryStatus: {
         type: String,
         enum: [
