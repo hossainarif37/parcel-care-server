@@ -54,3 +54,12 @@ export interface IReview extends Document {
     feedback: string;
     reviewDate: Date;
 }
+
+export interface ITransaction extends Document {
+    parcel: Types.ObjectId;
+    sender: Types.ObjectId;
+    amount: number;
+    transactionId: string;
+    paymentMethod: string;
+    createdAt: Date;
+}
