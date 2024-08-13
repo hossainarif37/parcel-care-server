@@ -40,6 +40,7 @@ export interface IParcel extends Document {
     };
     requestedDeliveryDate: Date;
     price: number;
+    transactionId?: string;
     paymentStatus: 'Unpaid' | 'Paid';
     deliveryStatus: 'Order Placed' | 'Pickup Agent Assigned' | 'Parcel Collected' | 'In Transit' | 'Delivery Hub Reached' | 'Delivery Agent Assigned' | 'Out For Delivery' | 'Delivered'
     assignedAgentId?: Types.ObjectId;

@@ -24,6 +24,7 @@ const parcelSchema: Schema = new Schema({
     },
     requestedDeliveryDate: { type: Date, required: true },
     price: { type: Number, required: true },
+    transactionId: { type: String },
     paymentStatus: { type: String, enum: ['Unpaid', 'Paid'], default: 'Unpaid' },
     deliveryStatus: {
         type: String,
