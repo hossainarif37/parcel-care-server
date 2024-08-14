@@ -1,5 +1,5 @@
 import express from "express"
-import { bookAParcel, getAllBookedParcels, getAssignedParcelsByAgentIdAndRole, getBookedParcelsByUserId, updateParcelInfo } from "../controllers/parcelBooking.controller";
+import { bookAParcel, getAllBookedParcels, getAssignedParcelsByAgentIdAndRole, getBookedParcelsByUserId, updateParcelInfo } from "../controllers/parcel.controller";
 import { checkAuth } from "../middleware/authorization";
 import { isAdmin } from "../middleware/adminCheck";
 const router = express.Router();
