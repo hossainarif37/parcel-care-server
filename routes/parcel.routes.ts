@@ -1,5 +1,5 @@
 import express from "express"
-import { bookAParcel, getAllBookedParcels, getAssignedParcelsByAgentIdAndRole, getBookedParcelsByUserId, updateParcelInfo } from "../controllers/parcel.controller";
+import { bookAParcel, getABookedParcelById, getAllBookedParcels, getAssignedParcelsByAgentIdAndRole, getBookedParcelsByUserId, updateParcelInfo } from "../controllers/parcel.controller";
 import { checkAuth } from "../middleware/authorization";
 import { isAdmin } from "../middleware/adminCheck";
 const router = express.Router();
@@ -9,7 +9,9 @@ router
 
     .get('/', checkAuth, isAdmin, getAllBookedParcels)
 
-    .get('/:userId', checkAuth, getBookedParcelsByUserId)
+    .get('/:userId/parcels', checkAuth, getBookedParcelsByUserId)
+
+    .get('/:parcelId', checkAuth, getABookedParcelById)
 
     .put('/:parcelId', checkAuth, updateParcelInfo)
 

@@ -60,6 +60,21 @@ export const getBookedParcelsByUserId = async (req: Request, res: Response, next
     }
 }
 
+export const getABookedParcelById = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const parcelId = req.params.parcelId;
+        const userId = (req.user as IUser)._id;
+        const parcel = await Parcel.findOne({ _id: parcelId, senderId: userId });
+        if (!parcel) {
+            return res.status(404).json({ success: false, message: "Parcel not found" });
+        }
+        return res.status(200).json({ success: true, parcel });
+    } catch (error) {
+        console.log('getABookedParcelById Error: ', error);
+        next(error);
+    }
+}
+
 // Update the updateParcelInfo function in parcelBooking.controller.ts
 export const updateParcelInfo = async (req: Request, res: Response, next: NextFunction) => {
     try {
