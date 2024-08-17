@@ -22,7 +22,7 @@ export interface IParcel extends Document {
     senderId: Types.ObjectId;
     senderName: string;
     senderEmail: string;
-    senderPhoneNumber: string;
+    senderPhoneNumber: number;
     senderAddress: {
         fullAddress: string;
         subDistrict: string;
@@ -32,7 +32,7 @@ export interface IParcel extends Document {
     parcelWeight: number;
     receiverName: string;
     receiverEmail: string;
-    receiverPhoneNumber: string;
+    receiverPhoneNumber: number;
     deliveryAddress: {
         fullAddress: string;
         subDistrict: string;
@@ -43,6 +43,10 @@ export interface IParcel extends Document {
     transactionId?: string;
     paymentStatus: 'Unpaid' | 'Paid';
     deliveryStatus: 'Order Placed' | 'Pickup Agent Assigned' | 'Parcel Collected' | 'In Transit' | 'Delivery Hub Reached' | 'Delivery Agent Assigned' | 'Out For Delivery' | 'Delivered'
+    deliveryStatusHistory: Array<{
+        status: 'Order Placed' | 'Pickup Agent Assigned' | 'Parcel Collected' | 'In Transit' | 'Delivery Hub Reached' | 'Delivery Agent Assigned' | 'Out For Delivery' | 'Delivered';
+        updatedAt: Date;
+    }>,
     assignedAgentId?: Types.ObjectId;
     assignedAgentRole?: 'pickup' | 'delivery';
     bookingDate: Date;

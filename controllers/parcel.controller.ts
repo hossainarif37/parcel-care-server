@@ -12,11 +12,18 @@ export const bookAParcel = async (req: Request, res: Response, next: NextFunctio
 
         // Assuming req.user contains the authenticated user's ID
         const parcelData: IParcel = {
-            ...req.body,
-            userId: (req.user as IUser)._id,
+            ...req.body
         };
 
         const newParcel = new Parcel(parcelData);
+
+        // Ensure deliveryStatusHistory starts with a default entry
+        if (!newParcel.deliveryStatusHistory.length) {
+            newParcel.deliveryStatusHistory.push({
+                status: 'Order Placed',
+                updatedAt: new Date()
+            });
+        }
 
         // Save the parcel document to the database
         await newParcel.save();
@@ -44,7 +51,6 @@ export const getAllBookedParcels = async (req: Request, res: Response, next: Nex
 
 export const getBookedParcelsByUserId = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        console.log('execute');
         const senderId = req.params.userId;
         const parcels: IParcel[] = await Parcel.find({ senderId });
 
@@ -80,9 +86,13 @@ export const updateParcelInfo = async (req: Request, res: Response, next: NextFu
     try {
         const parcelId = req.params.parcelId;
         const updates = req.body;
+        console.log(82, updates);
+
 
         // Find the parcel by ID and explicitly cast it to the Mongoose Document type
         const parcel: any = await Parcel.findById(parcelId);
+
+        console.log(88, parcel);
         if (!parcel) {
             return res.status(404).json({ success: false, message: "Parcel not found." });
         }
@@ -94,6 +104,16 @@ export const updateParcelInfo = async (req: Request, res: Response, next: NextFu
                 if (key === 'assignedAgentId' && (!req.user || (req.user as IUser).role !== 'admin')) {
                     return res.status(403).json({ success: false, message: "Only admins can assign a agent" });
                 }
+                // Handle deliveryStatus to push into deliveryStatusHistory
+                else if (key === 'deliveryStatus') {
+                    console.log('Execute');
+                    if (updates[key] === parcel.deliveryStatus) {
+                        return res.status(400).json({ success: false, message: "Cannot update delivery status to the same value." });
+
+                    }
+                    parcel?.deliveryStatusHistory.push({ status: updates[key], updatedAt: new Date() });
+                }
+                // Other updates can be applied directly
                 (parcel as any)[key] = updates[key];
             }
         }
