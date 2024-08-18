@@ -22,17 +22,17 @@ export interface IParcel extends Document {
     senderId: Types.ObjectId;
     senderName: string;
     senderEmail: string;
-    senderPhoneNumber: string;
+    senderPhoneNumber: number;
     senderAddress: {
         fullAddress: string;
         subDistrict: string;
         district: string;
     };
-    parcelType: string;
+    parcelType: 'Document' | 'Box';
     parcelWeight: number;
     receiverName: string;
     receiverEmail: string;
-    receiverPhoneNumber: string;
+    receiverPhoneNumber: number;
     deliveryAddress: {
         fullAddress: string;
         subDistrict: string;
@@ -40,8 +40,13 @@ export interface IParcel extends Document {
     };
     requestedDeliveryDate: Date;
     price: number;
-    paymentStatus: 'pending' | 'paid';
+    transactionId?: string;
+    paymentStatus: 'Unpaid' | 'Paid';
     deliveryStatus: 'Order Placed' | 'Pickup Agent Assigned' | 'Parcel Collected' | 'In Transit' | 'Delivery Hub Reached' | 'Delivery Agent Assigned' | 'Out For Delivery' | 'Delivered'
+    deliveryStatusHistory: Array<{
+        status: 'Order Placed' | 'Pickup Agent Assigned' | 'Parcel Collected' | 'In Transit' | 'Delivery Hub Reached' | 'Delivery Agent Assigned' | 'Out For Delivery' | 'Delivered';
+        updatedAt: Date;
+    }>,
     assignedAgentId?: Types.ObjectId;
     assignedAgentRole?: 'pickup' | 'delivery';
     bookingDate: Date;
@@ -53,4 +58,13 @@ export interface IReview extends Document {
     rating: number;
     feedback: string;
     reviewDate: Date;
+}
+
+export interface ITransaction extends Document {
+    parcel: Types.ObjectId;
+    sender: Types.ObjectId;
+    amount: number;
+    transactionId: string;
+    paymentMethod: string;
+    createdAt: Date;
 }
