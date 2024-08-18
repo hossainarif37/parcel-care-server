@@ -32,12 +32,23 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
                 });
 
                 //* save the user
-                await newUser.save();
+                const user: any = await newUser.save();
+                const payload: any = {
+                    id: user._id,
+                    email: user.email
+                }
 
+                //* Generate jwt token
+                if (!process.env.JWT_SECRET_KEY) {
+                    throw new Error('JWT_SECRET_KEY is not defined in the environment variables');
+                }
 
-                return res.status(201).json({
+                const token = jwt.sign(payload, process.env.JWT_SECRET_KEY as string, { expiresIn: '30d' });
+                res.status(201).send({
                     success: true,
-                    message: 'User registered successfully.'
+                    message: "User registered successfully",
+                    token: `Bearer ${token}`,
+                    user
                 })
             } catch (error) {
                 console.log('Register User Controller at Bcrypt function: ', (error as Error).message);
