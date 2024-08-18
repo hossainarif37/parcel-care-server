@@ -1,5 +1,5 @@
 import express from "express"
-import { getCurrentUser, getUserById, getUsersByRole, updateUserInfo } from "../controllers/user.controller";
+import { getCurrentUser, getPendingAgents, getUserById, getUsersByRole, updateUserInfo } from "../controllers/user.controller";
 import { checkAuth } from "../middleware/authorization";
 import { isAdmin } from "../middleware/adminCheck";
 const router = express.Router();
@@ -36,7 +36,10 @@ router
     .get('/:userId/profile', checkAuth, getUserById)
 
     .put('/:userId/profile', checkAuth, updateUserInfo)
+
     .get('/', checkAuth, isAdmin, getUsersByRole)
+
+    .get('/pending-agents', checkAuth, isAdmin, getPendingAgents)
 
 
 

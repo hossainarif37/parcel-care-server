@@ -104,3 +104,13 @@ export const getUsersByRole = async (req: Request, res: Response, next: NextFunc
         next(error);
     }
 };
+
+export const getPendingAgents = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const pendingAgents = await User.find({ role: 'agent', agentRequestStatus: 'pending' });
+        res.status(200).json({ success: true, pendingAgents });
+    } catch (error) {
+        console.log('Get Pending Agents Controller: ', (error as Error).message);
+        next(error);
+    }
+}
