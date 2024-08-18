@@ -14,7 +14,7 @@ export interface IUser extends Document {
     district?: string;
     isEmailVerified?: boolean;
     isProfileComplete?: boolean;
-    agentRequestStatus?: 'pending' | 'approved' | 'canceled';
+    agentRequestStatus?: 'pending' | 'accepted' | 'rejected';
     createdAt?: Date;
 }
 

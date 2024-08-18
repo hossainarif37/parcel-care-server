@@ -9,7 +9,7 @@ const saltRounds = 10;
 // User Registration Controller 
 export const registerUser = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { email, password, name, profilePicture } = req.body;
+        const { email, password, name, profilePicture, agentRequestStatus, role } = req.body;
         const userExist = await User.findOne({ email });
 
         //* Check user is already exist or not in the database
@@ -17,6 +17,13 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
             return res.status(409).json({
                 success: false,
                 message: 'Email already exist. Please use a different email or log in'
+            })
+        }
+
+        if (role === 'agent' && agentRequestStatus !== 'pending') {
+            return res.status(400).json({
+                success: false,
+                message: 'Agent request status must be pending'
             })
         }
 
@@ -28,7 +35,9 @@ export const registerUser = async (req: Request, res: Response, next: NextFuncti
                     name,
                     email,
                     password: hash,
-                    profilePicture
+                    profilePicture,
+                    agentRequestStatus,
+                    role
                 });
 
                 //* save the user
