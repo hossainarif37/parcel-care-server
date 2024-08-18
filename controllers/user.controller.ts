@@ -49,9 +49,28 @@ export const updateUserInfo = async (req: Request, res: Response, next: NextFunc
         // Update other user info
         if (Object.keys(userInfo).length > 0) {
             Object.assign(user, userInfo);
+            // Assuming these are the necessary fields for a completed profile
+            const requiredFields = ['name', 'email', 'profilePicture', 'phoneNumber', 'fullAddress', 'subDistrict', 'district'];
+
+            for (const field of requiredFields) {
+                // Check if the field is empty
+                if (user[field] === undefined || user[field] === null || user[field] === '') {
+                    // Delete the property from the user object
+                    user[field] = undefined;
+                }
+            }
+            const allFieldsCompleted = requiredFields.every(field => user[field] !== undefined && user[field] !== null && user[field] !== '');
+
+            if (allFieldsCompleted) {
+                user.isProfileComplete = true;
+            } else {
+                user.isProfileComplete = false;
+            }
+
             await user.save();
             return res.status(200).json({ success: true, message: 'User info updated successfully', user });
         }
+
         // Update user role
         if (role) {
             if ((req.user as IUser).role === 'admin') {
