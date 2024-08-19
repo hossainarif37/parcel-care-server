@@ -41,7 +41,7 @@ router
 
     .get('/pending-agents', checkAuth, isAdmin, getPendingAgents)
 
-    .put('/update-agent-request-status/:agentId', checkAuth, isAdmin, updateAgentRequestStatus)
+    .put('/:userId/agent-request-status', checkAuth, isAdmin, updateAgentRequestStatus)
 
 
 

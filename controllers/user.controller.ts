@@ -117,23 +117,23 @@ export const getPendingAgents = async (req: Request, res: Response, next: NextFu
 
 export const updateAgentRequestStatus = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        const { agentId } = req.params;
+        const { userId } = req.params;
         const { agentRequestStatus } = req.body;
-        const agent = await User.findOne({ _id: agentId, role: 'agent' });
-        if (!agent) {
-            return res.status(404).json({ success: false, message: 'Agent not found' });
+        const user = await User.findOne({ _id: userId, role: 'agent' });
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'User not found' });
         }
-        else if (!agent.isProfileComplete) {
+        else if (!user.isProfileComplete) {
             return res.status(400).json({ success: false, message: 'Profile is not completed. Need to complete the profile first' });
         }
-        else if (agentRequestStatus === agent.agentRequestStatus) {
+        else if (agentRequestStatus === user.agentRequestStatus) {
             return res.status(400).json({ success: false, message: 'Agent request status is already ' + agentRequestStatus });
-        } else if (agent.agentRequestStatus === 'accepted' && agentRequestStatus === 'rejected' || agentRequestStatus === 'pending') {
+        } else if (user.agentRequestStatus === 'accepted' && agentRequestStatus === 'rejected' || agentRequestStatus === 'pending') {
             return res.status(400).json({ success: false, message: 'Agent request status cannot be ' + agentRequestStatus });
         }
 
-        agent.agentRequestStatus = agentRequestStatus;
-        await agent.save();
+        user.agentRequestStatus = agentRequestStatus;
+        await user.save();
         res.status(200).json({ success: true, message: 'Agent request status updated successfully' });
     } catch (error) {
         console.log('Update Agent Request Status Controller: ', (error as Error).message);
