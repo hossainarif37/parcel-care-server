@@ -1,5 +1,5 @@
 import express from "express"
-import { getCurrentUser, getPendingAgents, getUserById, getUsersByRole, updateUserInfo } from "../controllers/user.controller";
+import { getCurrentUser, getPendingAgents, getUserById, getUsersByRole, updateAgentRequestStatus, updateUserInfo } from "../controllers/user.controller";
 import { checkAuth } from "../middleware/authorization";
 import { isAdmin } from "../middleware/adminCheck";
 const router = express.Router();
@@ -40,6 +40,8 @@ router
     .get('/', checkAuth, isAdmin, getUsersByRole)
 
     .get('/pending-agents', checkAuth, isAdmin, getPendingAgents)
+
+    .put('/update-agent-request-status/:agentId', checkAuth, isAdmin, updateAgentRequestStatus)
 
 
 
