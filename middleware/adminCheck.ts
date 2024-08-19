@@ -12,6 +12,6 @@ export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
         next();
     } else {
         // If the user is not an admin, return an error response
-        res.status(403).json({ success: false, message: 'Permission denied. Only admins can access this route.' });
+        res.status(403).json({ success: false, message: 'Permission denied. Only admin can access this route.' });
     }
 };

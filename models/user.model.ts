@@ -13,6 +13,7 @@ const userSchema: Schema = new Schema({
     subDistrict: { type: String },
     isEmailVerified: { type: Boolean, default: false },
     isProfileComplete: { type: Boolean, default: false },
+    agentRequestStatus: { type: String, enum: ['pending', 'accepted', 'rejected'] },
     district: { type: String },
     createdAt: { type: Date, default: Date.now }
 });
