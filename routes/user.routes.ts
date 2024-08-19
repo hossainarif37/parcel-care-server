@@ -37,6 +37,7 @@ router
 
     .put('/:userId/profile', checkAuth, updateUserInfo)
 
+    // Get all users by role
     .get('/', checkAuth, isAdmin, getUsersByRole)
 
     .get('/pending-agents', checkAuth, isAdmin, getPendingAgents)

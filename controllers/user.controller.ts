@@ -92,11 +92,20 @@ export const updateUserInfo = async (req: Request, res: Response, next: NextFunc
 export const getUsersByRole = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const { role } = req.query;
-        const users = await User.find({ role: role });
+        let users: any = [];
+        console.log();
+        if (role === 'user') {
+            users = await User.find({ role: role }, { password: 0 });
+        } else if (role === 'agent') {
+            users = await User.find({ role: role, agentRequestStatus: 'accepted' }, { password: 0 });
+        }
 
         // Check if users were found
         if (users.length > 0) {
-            return res.status(200).json({ success: true, users });
+            return res.status(200).json({
+                success: true,
+                [role === 'agent' ? 'agents' : 'users']: users
+            });
         } else {
             return res.status(404).json({ success: false, message: 'No users found with the specified role.' });
         }
