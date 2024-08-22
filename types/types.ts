@@ -49,7 +49,7 @@ export interface IParcel extends Document {
         status: 'Order Placed' | 'Pickup Agent Assigned' | 'Parcel Collected' | 'In Transit' | 'Delivery Hub Reached' | 'Delivery Agent Assigned' | 'Out For Delivery' | 'Delivered';
         updatedAt: Date;
     }>,
-    assignedAgentId?: Types.ObjectId;
+    assignedAgent?: Types.ObjectId;
     assignedAgentRole?: 'pickup' | 'delivery';
     bookingDate: Date;
 }
