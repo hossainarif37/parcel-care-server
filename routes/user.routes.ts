@@ -11,7 +11,7 @@ router
     // Get user by user ID
     .get('/:userId/profile', checkAuth, getUserById)
 
-    // Get Agents by role and district
+    // Get Agents by district
     .get('/agents', checkAuth, isAdmin, getAgentsByDistrict)
 
     // Update user info by user ID
