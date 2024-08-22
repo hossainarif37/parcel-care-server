@@ -85,13 +85,11 @@ export const updateParcelInfo = async (req: Request, res: Response, next: NextFu
     try {
         const parcelId = req.params.parcelId;
         const updates = req.body;
-        console.log(82, updates);
 
 
         // Find the parcel by ID and explicitly cast it to the Mongoose Document type
         const parcel: any = await Parcel.findById(parcelId);
 
-        console.log(88, parcel);
         if (!parcel) {
             return res.status(404).json({ success: false, message: "Parcel not found." });
         }
