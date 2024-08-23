@@ -84,36 +84,34 @@ export const getABookedParcelById = async (req: Request, res: Response, next: Ne
 export const updateParcelInfo = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const parcelId = req.params.parcelId;
-        const updates = req.body;
-        console.log(82, updates);
+        const data = req.body;
 
 
         // Find the parcel by ID and explicitly cast it to the Mongoose Document type
         const parcel: any = await Parcel.findById(parcelId);
 
-        console.log(88, parcel);
         if (!parcel) {
             return res.status(404).json({ success: false, message: "Parcel not found." });
         }
 
         // Update the parcel information
-        for (const key in updates) {
-            if (updates.hasOwnProperty(key)) {
-                // Special handling for assignedAgentId to ensure only admins can assign
-                if (key === 'assignedAgentId' && (!req.user || (req.user as IUser).role !== 'admin')) {
-                    return res.status(403).json({ success: false, message: "Only admins can assign a agent" });
+        for (const key in data) {
+            if (data.hasOwnProperty(key)) {
+                // Special handling for assignedAgent to ensure only admins can assign
+                if (key === 'assignedAgent' && (!req.user || (req.user as IUser).role !== 'admin')) {
+                    return res.status(403).json({ success: false, message: "Only admin can assign a agent" });
                 }
                 // Handle deliveryStatus to push into deliveryStatusHistory
                 else if (key === 'deliveryStatus') {
                     console.log('Execute');
-                    if (updates[key] === parcel.deliveryStatus) {
+                    if (data[key] === parcel.deliveryStatus) {
                         return res.status(400).json({ success: false, message: "Cannot update delivery status to the same value." });
 
                     }
-                    parcel?.deliveryStatusHistory.push({ status: updates[key], updatedAt: new Date() });
+                    parcel?.deliveryStatusHistory.push({ status: data[key], updatedAt: new Date() });
                 }
                 // Other updates can be applied directly
-                (parcel as any)[key] = updates[key];
+                (parcel as any)[key] = data[key];
             }
         }
 
@@ -129,13 +127,13 @@ export const updateParcelInfo = async (req: Request, res: Response, next: NextFu
 export const getAssignedParcelsByAgentIdAndRole = async (req: Request, res: Response, next: NextFunction) => {
     try {
         // Extract assigned agents id
-        const assignedAgentId = req.params.agentId;
+        const assignedAgent = req.params.agentId;
         // Extract assignedAgentRole from the query parameters
         const assignedAgentRole = req.query.assignedAgentRole;
 
         // Perform the check in the database
         const isAgent = await User.findOne({
-            _id: assignedAgentId,
+            _id: assignedAgent,
             role: 'agent'
         });
 
@@ -146,7 +144,7 @@ export const getAssignedParcelsByAgentIdAndRole = async (req: Request, res: Resp
 
 
         // Prepare the query object
-        const query: any = { assignedAgentId: assignedAgentId, assignedAgentRole };
+        const query: any = { assignedAgent: assignedAgent, assignedAgentRole };
 
         // Fetch all parcels assigned to the agent with the specified role
         const parcels = await Parcel.find(query);

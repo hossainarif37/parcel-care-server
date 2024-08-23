@@ -29,6 +29,20 @@ export const getUserById = async (req: Request, res: Response, next: NextFunctio
     }
 }
 
+export const getAgentsByDistrict = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { district } = req.query;
+        const agents = await User.find({ role: 'agent', district }, { _id: 1, name: 1, profilePicture: 1 });
+        if (agents.length === 0) {
+            return res.status(404).json({ success: false, message: `No agents found in ${district}` });
+        }
+        res.status(200).json({ success: true, agents });
+    } catch (error) {
+        console.log('Get Agents By District Controller: ', (error as Error).message);
+        next(error);
+    }
+}
+
 
 export const updateUserInfo = async (req: Request, res: Response, next: NextFunction) => {
     try {

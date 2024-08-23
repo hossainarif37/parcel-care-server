@@ -56,7 +56,7 @@ const parcelSchema: Schema = new Schema({
         },
         updatedAt: { type: Date }
     }],
-    assignedAgentId: { type: Schema.Types.ObjectId, ref: 'User' },
+    assignedAgent: { type: Schema.Types.ObjectId, ref: 'User' },
     assignedAgentRole: { type: String, enum: ['pickup', 'delivery'] },
     bookingDate: { type: Date, default: Date.now }
 });
