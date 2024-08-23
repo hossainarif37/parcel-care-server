@@ -103,10 +103,12 @@ export const updateParcelInfo = async (req: Request, res: Response, next: NextFu
                 }
                 // Handle deliveryStatus to push into deliveryStatusHistory
                 else if (key === 'deliveryStatus') {
-                    console.log('Execute');
                     if (data[key] === parcel.deliveryStatus) {
                         return res.status(400).json({ success: false, message: "Cannot update delivery status to the same value." });
 
+                    }
+                    else if (parcel.paymentStatus === 'Unpaid') {
+                        return res.status(400).json({ success: false, message: "Cannot update delivery status while parcel is unpaid." });
                     }
                     parcel?.deliveryStatusHistory.push({ status: data[key], updatedAt: new Date() });
                 }
@@ -140,8 +142,6 @@ export const getAssignedParcelsByAgentIdAndRole = async (req: Request, res: Resp
         if (!isAgent) {
             return res.status(403).json({ success: false, message: "Only agent is allowed to access this route." });
         }
-
-
 
         // Prepare the query object
         const query: any = { assignedAgent: assignedAgent, assignedAgentRole };
