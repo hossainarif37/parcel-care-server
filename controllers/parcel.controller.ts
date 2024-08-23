@@ -83,12 +83,13 @@ export const getABookedParcelById = async (req: Request, res: Response, next: Ne
 // Update the updateParcelInfo function in parcelBooking.controller.ts
 export const updateParcelInfo = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        if ((req.user as IUser).role !== 'admin' || (req.user as IUser).role !== 'agent') {
+        if ((req.user as IUser).role === 'user') {
             return res.status(403).json({ success: false, message: 'Permission denied!' });
         }
 
         const parcelId = req.params.parcelId;
         const data = req.body;
+
 
         // Find the parcel by ID and explicitly cast it to the Mongoose Document type
         const parcel: any = await Parcel.findById(parcelId);
@@ -131,13 +132,13 @@ export const updateParcelInfo = async (req: Request, res: Response, next: NextFu
 export const getAssignedParcelsByAgentIdAndRole = async (req: Request, res: Response, next: NextFunction) => {
     try {
         // Extract assigned agents id
-        const assignedAgent = req.params.agentId;
+        const assignedAgentId = req.params.agentId;
         // Extract assignedAgentRole from the query parameters
         const assignedAgentRole = req.query.assignedAgentRole;
 
         // Perform the check in the database
         const isAgent = await User.findOne({
-            _id: assignedAgent,
+            _id: assignedAgentId,
             role: 'agent'
         });
 
@@ -146,7 +147,7 @@ export const getAssignedParcelsByAgentIdAndRole = async (req: Request, res: Resp
         }
 
         // Prepare the query object
-        const query: any = { assignedAgent: assignedAgent, assignedAgentRole };
+        const query: any = { assignedAgent: assignedAgentId, assignedAgentRole };
 
         // Fetch all parcels assigned to the agent with the specified role
         const parcels = await Parcel.find(query);

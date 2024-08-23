@@ -8,6 +8,6 @@ export const isAgent = (req: Request, res: Response, next: NextFunction) => {
     if (user && (user as IUser).role === 'agent') {
         next();
     } else {
-        res.status(403).json({ success: false, message: 'Permission denied!' });
+        res.status(403).json({ success: false, message: 'Only agent is allowed to access this route.' });
     }
 };

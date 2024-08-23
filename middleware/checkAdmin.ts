@@ -7,6 +7,6 @@ export const isAdmin = (req: Request, res: Response, next: NextFunction) => {
     if (user && (user as IUser).role === 'admin') {
         next();
     } else {
-        res.status(403).json({ success: false, message: 'Permission denied!' });
+        res.status(403).json({ success: false, message: 'Only admin is allowed to access this route.' });
     }
 };
