@@ -83,9 +83,12 @@ export const getABookedParcelById = async (req: Request, res: Response, next: Ne
 // Update the updateParcelInfo function in parcelBooking.controller.ts
 export const updateParcelInfo = async (req: Request, res: Response, next: NextFunction) => {
     try {
+        if ((req.user as IUser).role !== 'admin' || (req.user as IUser).role !== 'agent') {
+            return res.status(403).json({ success: false, message: 'Permission denied!' });
+        }
+
         const parcelId = req.params.parcelId;
         const data = req.body;
-
 
         // Find the parcel by ID and explicitly cast it to the Mongoose Document type
         const parcel: any = await Parcel.findById(parcelId);
