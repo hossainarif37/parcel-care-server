@@ -1,7 +1,7 @@
 import express from "express"
 import { getAgentsByDistrict, getCurrentUser, getPendingAgents, getUserById, getUsersByRole, updateAgentRequestStatus, updateUserInfo } from "../controllers/user.controller";
 import { checkAuth } from "../middleware/authorization";
-import { isAdmin } from "../middleware/adminCheck";
+import { isAdmin } from "../middleware/checkAdmin";
 const router = express.Router();
 
 router

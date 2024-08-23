@@ -105,7 +105,6 @@ export const updateParcelInfo = async (req: Request, res: Response, next: NextFu
                 else if (key === 'deliveryStatus') {
                     if (data[key] === parcel.deliveryStatus) {
                         return res.status(400).json({ success: false, message: "Cannot update delivery status to the same value." });
-
                     }
                     else if (parcel.paymentStatus === 'Unpaid') {
                         return res.status(400).json({ success: false, message: "Cannot update delivery status while parcel is unpaid." });
