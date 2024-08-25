@@ -44,8 +44,8 @@ export interface IParcel extends Document {
     price: number;
     transactionId?: string;
     paymentStatus: 'Unpaid' | 'Paid';
-    deliveryStatus: 'Order Placed' | 'Pickup Agent Assigned' | 'Parcel Collected' | 'In Transit' | 'Delivery Hub Reached' | 'Delivery Agent Assigned' | 'Out For Delivery' | 'Delivered'
-    deliveryStatusHistory: Array<{
+    shipmentStatus: 'Order Placed' | 'Pickup Agent Assigned' | 'Parcel Collected' | 'In Transit' | 'Delivery Hub Reached' | 'Delivery Agent Assigned' | 'Out For Delivery' | 'Delivered'
+    shipmentStatusHistory: Array<{
         status: 'Order Placed' | 'Pickup Agent Assigned' | 'Parcel Collected' | 'In Transit' | 'Delivery Hub Reached' | 'Delivery Agent Assigned' | 'Out For Delivery' | 'Delivered';
         updatedAt: Date;
     }>,

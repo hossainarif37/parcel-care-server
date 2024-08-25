@@ -13,7 +13,7 @@ export const createReviewForParcel = async (req: Request, res: Response, next: N
 
         // Check if the parcel has been delivered
         const parcel = await Parcel.findById(parcelId);
-        if (!parcel || parcel.deliveryStatus !== 'Delivered') {
+        if (!parcel || parcel.shipmentStatus !== 'Delivered') {
             return res.status(400).json({
                 success: false,
                 message: "The parcel has not been delivered yet. You cannot add a review."

@@ -17,9 +17,9 @@ export const bookAParcel = async (req: Request, res: Response, next: NextFunctio
 
         const newParcel = new Parcel(parcelData);
 
-        // Ensure deliveryStatusHistory starts with a default entry
-        if (!newParcel.deliveryStatusHistory.length) {
-            newParcel.deliveryStatusHistory.push({
+        // Ensure shipmentStatusHistory starts with a default entry
+        if (!newParcel.shipmentStatusHistory.length) {
+            newParcel.shipmentStatusHistory.push({
                 status: 'Order Placed',
                 updatedAt: new Date()
             });
@@ -39,6 +39,10 @@ export const getAllBookedParcels = async (req: Request, res: Response, next: Nex
     try {
         // Fetch all parcel documents from the database
         const parcels = await Parcel.find({});
+
+        if (parcels.length === 0) {
+            return res.status(404).json({ success: false, message: "No parcels found." });
+        }
 
         // Return the parcels in the response
         return res.status(200).json({ success: true, parcels });
@@ -105,15 +109,15 @@ export const updateParcelInfo = async (req: Request, res: Response, next: NextFu
                 if (key === 'assignedAgent' && (!req.user || (req.user as IUser).role !== 'admin')) {
                     return res.status(403).json({ success: false, message: "Only admin can assign a agent" });
                 }
-                // Handle deliveryStatus to push into deliveryStatusHistory
-                else if (key === 'deliveryStatus') {
-                    if (data[key] === parcel.deliveryStatus) {
-                        return res.status(400).json({ success: false, message: "Cannot update delivery status to the same value." });
+                // Handle shipmentStatus to push into shipmentStatusHistory
+                else if (key === 'shipmentStatus') {
+                    if (data[key] === parcel.shipmentStatus) {
+                        return res.status(400).json({ success: false, message: "Cannot update shipment status to the same value." });
                     }
                     else if (parcel.paymentStatus === 'Unpaid') {
-                        return res.status(400).json({ success: false, message: "Cannot update delivery status while parcel is unpaid." });
+                        return res.status(400).json({ success: false, message: "Cannot update shipment status while parcel is unpaid." });
                     }
-                    parcel?.deliveryStatusHistory.push({ status: data[key], updatedAt: new Date() });
+                    parcel?.shipmentStatusHistory.push({ status: data[key], updatedAt: new Date() });
                 }
                 // Other updates can be applied directly
                 (parcel as any)[key] = data[key];
@@ -165,5 +169,25 @@ export const getAssignedParcelsByAgentIdAndRole = async (req: Request, res: Resp
     } catch (error) {
         console.log('getAssignedParcelsByAgentId Error: ', (error as Error).message);
         next(error);
+    }
+};
+
+export const updateStatusFieldsToShipment = async () => {
+    try {
+        console.log('Executed');
+        // Update all documents by renaming the fields
+        const result: any = await Parcel.updateMany(
+            { $or: [{ deliveryStatus: { $exists: true } }, { deliveryStatusHistory: { $exists: true } }] },
+            {
+                $rename: {
+                    "deliveryStatus": "shipmentStatus",
+                    "deliveryStatusHistory": "shipmentStatusHistory"
+                }
+            }
+        );
+
+        console.log(`Updated ${result.nModified} documents.`);
+    } catch (error) {
+        console.error('Error updating deliveryStatus and deliveryStatusHistory to shipmentStatus:', error);
     }
 };

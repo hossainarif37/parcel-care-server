@@ -26,7 +26,7 @@ const parcelSchema: Schema = new Schema({
     price: { type: Number, required: true },
     transactionId: { type: String },
     paymentStatus: { type: String, enum: ['Unpaid', 'Paid'], default: 'Unpaid' },
-    deliveryStatus: {
+    shipmentStatus: {
         type: String,
         enum: [
             'Order Placed',
@@ -40,7 +40,7 @@ const parcelSchema: Schema = new Schema({
         ],
         default: 'Order Placed'
     },
-    deliveryStatusHistory: [{
+    shipmentStatusHistory: [{
         status: {
             type: String,
             enum: [
