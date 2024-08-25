@@ -136,6 +136,10 @@ export const getAssignedParcelsByAgentIdAndRole = async (req: Request, res: Resp
         // Extract assignedAgentRole from the query parameters
         const assignedAgentRole = req.query.assignedAgentRole;
 
+        if (assignedAgentId === 'undefined' || assignedAgentRole === 'undefined') {
+            return res.status(400).json({ success: false, message: "Assigned agent id and role are required." });
+        }
+
         // Perform the check in the database
         const isAgent = await User.findOne({
             _id: assignedAgentId,
