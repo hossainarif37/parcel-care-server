@@ -107,7 +107,6 @@ export const getUsersByRole = async (req: Request, res: Response, next: NextFunc
     try {
         const { role } = req.query;
         let users: any = [];
-        console.log();
         if (role === 'user') {
             users = await User.find({ role: role }, { password: 0 });
         } else if (role === 'agent') {
@@ -145,17 +144,15 @@ export const updateAgentRequestStatus = async (req: Request, res: Response, next
     try {
         const { userId } = req.params;
         const { agentRequestStatus } = req.body;
-        const user = await User.findOne({ _id: userId, role: 'agent' });
+        const user: any = await User.findOne({ _id: userId, role: 'agent', agentRequestStatus: 'pending' });
         if (!user) {
-            return res.status(404).json({ success: false, message: 'User not found' });
+            return res.status(404).json({ success: false, message: 'Pending agent not found' });
         }
         else if (!user.isProfileComplete) {
             return res.status(400).json({ success: false, message: 'Profile is not completed. Need to complete the profile first' });
         }
         else if (agentRequestStatus === user.agentRequestStatus) {
             return res.status(400).json({ success: false, message: 'Agent request status is already ' + agentRequestStatus });
-        } else if (user.agentRequestStatus === 'accepted' && agentRequestStatus === 'rejected' || agentRequestStatus === 'pending') {
-            return res.status(400).json({ success: false, message: 'Agent request status cannot be ' + agentRequestStatus });
         }
 
         user.agentRequestStatus = agentRequestStatus;
@@ -163,6 +160,23 @@ export const updateAgentRequestStatus = async (req: Request, res: Response, next
         res.status(200).json({ success: true, message: 'Agent request status updated successfully' });
     } catch (error) {
         console.log('Update Agent Request Status Controller: ', (error as Error).message);
+        next(error);
+    }
+}
+
+export const resubmitAgentRequest = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const { userId } = req.params;
+        const user: any = await User.findOne({ _id: userId, role: 'agent', agentRequestStatus: 'rejected' });
+        if (!user) {
+            return res.status(404).json({ success: false, message: 'Rejected agent not found' });
+        }
+
+        user.agentRequestStatus = 'pending';
+        await user.save();
+        res.status(200).json({ success: true, message: 'Agent request resubmitted successfully', user });
+    } catch (error) {
+        console.log('Resubmit Agent Request Controller: ', (error as Error).message);
         next(error);
     }
 }

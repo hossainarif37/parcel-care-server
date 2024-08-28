@@ -1,7 +1,8 @@
 import express from "express"
-import { getAgentsByDistrict, getCurrentUser, getPendingAgents, getUserById, getUsersByRole, updateAgentRequestStatus, updateUserInfo } from "../controllers/user.controller";
+import { getAgentsByDistrict, getCurrentUser, getPendingAgents, getUserById, getUsersByRole, resubmitAgentRequest, updateAgentRequestStatus, updateUserInfo } from "../controllers/user.controller";
 import { checkAuth } from "../middleware/authorization";
 import { isAdmin } from "../middleware/checkAdmin";
+import { isAgent } from "../middleware/checkAgent";
 const router = express.Router();
 
 router
@@ -25,6 +26,9 @@ router
 
     // Update agent request status
     .put('/:userId/agent-request-status', checkAuth, isAdmin, updateAgentRequestStatus)
+
+    // Resubmit agent request status
+    .put('/:userId/agent-request-status/resubmit', checkAuth, isAgent, resubmitAgentRequest)
 
 
 
