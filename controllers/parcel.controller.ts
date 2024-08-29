@@ -29,7 +29,7 @@ export const bookAParcel = async (req: Request, res: Response, next: NextFunctio
         await newParcel.save();
 
         // Return a success response
-        return res.status(201).json({ success: true, message: "Parcel booked successfully.", parcel: newParcel });
+        return res.status(201).json({ success: true, message: "Booked successfully. Now make the payment to start the shipment process.", parcel: newParcel });
     } catch (error) {
         next(error);
     }
@@ -38,7 +38,7 @@ export const bookAParcel = async (req: Request, res: Response, next: NextFunctio
 export const getAllBookedParcels = async (req: Request, res: Response, next: NextFunction) => {
     try {
         // Fetch all parcel documents from the database
-        const parcels = await Parcel.find({});
+        const parcels: any = await Parcel.find({});
 
         if (parcels.length === 0) {
             return res.status(404).json({ success: false, message: "No parcels found." });
@@ -72,8 +72,7 @@ export const getBookedParcelsByUserId = async (req: Request, res: Response, next
 export const getABookedParcelById = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const parcelId = req.params.parcelId;
-        const userId = (req.user as IUser)._id;
-        const parcel = await Parcel.findOne({ _id: parcelId, senderId: userId });
+        const parcel = await Parcel.findOne({ _id: parcelId });
         if (!parcel) {
             return res.status(404).json({ success: false, message: "Parcel not found" });
         }
