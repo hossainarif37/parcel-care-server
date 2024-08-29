@@ -44,5 +44,4 @@ app.use((req: Request, res: Response, next: NextFunction) => {
 import errorHandler from "./errorHandlers/errorHandler";
 app.use(errorHandler);
 
-
 export default app;
