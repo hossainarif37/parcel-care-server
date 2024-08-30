@@ -118,12 +118,16 @@ export const updateParcelInfo = async (req: Request, res: Response, next: NextFu
                     }
 
                     if (data[key] === 'Delivered') {
-                        const agent: any = User.findById(parcel.assignedAgent);
+                        console.log('Executed the condition');
+                        const agent: any = await User.findById(parcel.assignedAgent);
+                        console.log(123, 'Agent: ', agent._id, agent.deliveryCount);
                         if (!agent.deliveryCount) {
                             agent.deliveryCount = 1;
                         } else {
                             agent.deliveryCount += 1;
                         }
+
+                        await agent.save();
 
                     }
                     parcel?.shipmentStatusHistory.push({ status: data[key], updatedAt: new Date() });
