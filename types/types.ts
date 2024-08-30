@@ -15,6 +15,7 @@ export interface IUser extends Document {
     isEmailVerified?: boolean;
     isProfileComplete?: boolean;
     agentRequestStatus?: 'pending' | 'accepted' | 'rejected';
+    deliveryCount?: number;
     createdAt?: Date;
     [key: string]: any;
 }

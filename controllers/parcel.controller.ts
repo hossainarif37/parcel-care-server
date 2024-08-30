@@ -116,6 +116,16 @@ export const updateParcelInfo = async (req: Request, res: Response, next: NextFu
                     else if (parcel.paymentStatus === 'Unpaid') {
                         return res.status(400).json({ success: false, message: "Cannot update shipment status while parcel is unpaid." });
                     }
+
+                    if (data[key] === 'Delivered') {
+                        const agent: any = User.findById(parcel.assignedAgent);
+                        if (!agent.deliveryCount) {
+                            agent.deliveryCount = 1;
+                        } else {
+                            agent.deliveryCount += 1;
+                        }
+
+                    }
                     parcel?.shipmentStatusHistory.push({ status: data[key], updatedAt: new Date() });
                 }
                 // Other updates can be applied directly

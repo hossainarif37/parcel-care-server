@@ -10,11 +10,12 @@ const userSchema: Schema = new Schema({
     profilePicture: { type: String },
     phoneNumber: { type: Number },
     fullAddress: { type: String },
+    district: { type: String },
     subDistrict: { type: String },
     isEmailVerified: { type: Boolean, default: false },
     isProfileComplete: { type: Boolean, default: false },
     agentRequestStatus: { type: String, enum: ['pending', 'accepted', 'rejected'] },
-    district: { type: String },
+    deliveryCount: { type: Number },
     createdAt: { type: Date, default: Date.now }
 });
 
