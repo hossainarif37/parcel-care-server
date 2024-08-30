@@ -110,11 +110,29 @@ export const updateParcelInfo = async (req: Request, res: Response, next: NextFu
                 }
                 // Handle shipmentStatus to push into shipmentStatusHistory
                 else if (key === 'shipmentStatus') {
-                    if (data[key] === parcel.shipmentStatus) {
+                    if (parcel.shipmentStatus === 'Delivered') {
+                        return res.status(400).json({ success: false, message: "Cannot update shipment status while parcel is delivered." });
+                    }
+
+                    else if (data[key] === parcel.shipmentStatus) {
                         return res.status(400).json({ success: false, message: "Cannot update shipment status to the same value." });
                     }
                     else if (parcel.paymentStatus === 'Unpaid') {
                         return res.status(400).json({ success: false, message: "Cannot update shipment status while parcel is unpaid." });
+                    }
+
+                    if (data[key] === 'Delivered') {
+                        console.log('Executed the condition');
+                        const agent: any = await User.findById(parcel.assignedAgent);
+                        console.log(123, 'Agent: ', agent._id, agent.deliveryCount);
+                        if (!agent.deliveryCount) {
+                            agent.deliveryCount = 1;
+                        } else {
+                            agent.deliveryCount += 1;
+                        }
+
+                        await agent.save();
+
                     }
                     parcel?.shipmentStatusHistory.push({ status: data[key], updatedAt: new Date() });
                 }
