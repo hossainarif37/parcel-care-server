@@ -45,7 +45,7 @@ export const getAllReviewsByAgentId = async (req: Request, res: Response, next: 
     try {
         const { agentId } = req.params;
 
-        const reviews = await Review.find({ agentId });
+        const reviews: any = await Review.find({ agentId });
 
         res.status(200).json({
             success: true,
