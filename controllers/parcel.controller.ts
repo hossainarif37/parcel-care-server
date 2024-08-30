@@ -110,7 +110,11 @@ export const updateParcelInfo = async (req: Request, res: Response, next: NextFu
                 }
                 // Handle shipmentStatus to push into shipmentStatusHistory
                 else if (key === 'shipmentStatus') {
-                    if (data[key] === parcel.shipmentStatus) {
+                    if (parcel.shipmentStatus === 'Delivered') {
+                        return res.status(400).json({ success: false, message: "Cannot update shipment status while parcel is delivered." });
+                    }
+
+                    else if (data[key] === parcel.shipmentStatus) {
                         return res.status(400).json({ success: false, message: "Cannot update shipment status to the same value." });
                     }
                     else if (parcel.paymentStatus === 'Unpaid') {
