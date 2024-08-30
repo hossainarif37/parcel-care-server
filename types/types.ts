@@ -56,7 +56,7 @@ export interface IParcel extends Document {
 }
 export interface IReview extends Document {
     userId: Types.ObjectId;
-    deliveryMenId: Types.ObjectId;
+    agentId: Types.ObjectId;
     parcelId: Types.ObjectId;
     rating: number;
     feedback: string;
