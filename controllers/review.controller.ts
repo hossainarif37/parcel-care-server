@@ -47,6 +47,11 @@ export const getAllReviewsByAgentId = async (req: Request, res: Response, next: 
 
         const reviews: any = await Review.find({ agentId });
 
+        if (reviews.length === 0) {
+            return res.status(404).json({ success: false, message: "No reviews found." });
+
+        }
+
         res.status(200).json({
             success: true,
             reviews
