@@ -122,9 +122,7 @@ export const updateParcelInfo = async (req: Request, res: Response, next: NextFu
                     }
 
                     if (data[key] === 'Delivered') {
-                        console.log('Executed the condition');
                         const agent: any = await User.findById(parcel.assignedAgent);
-                        console.log(123, 'Agent: ', agent._id, agent.deliveryCount);
                         if (!agent.deliveryCount) {
                             agent.deliveryCount = 1;
                         } else {
@@ -186,25 +184,5 @@ export const getAssignedParcelsByAgentIdAndRole = async (req: Request, res: Resp
     } catch (error) {
         console.log('getAssignedParcelsByAgentId Error: ', (error as Error).message);
         next(error);
-    }
-};
-
-export const updateStatusFieldsToShipment = async () => {
-    try {
-        console.log('Executed');
-        // Update all documents by renaming the fields
-        const result: any = await Parcel.updateMany(
-            { $or: [{ deliveryStatus: { $exists: true } }, { deliveryStatusHistory: { $exists: true } }] },
-            {
-                $rename: {
-                    "deliveryStatus": "shipmentStatus",
-                    "deliveryStatusHistory": "shipmentStatusHistory"
-                }
-            }
-        );
-
-        console.log(`Updated ${result.nModified} documents.`);
-    } catch (error) {
-        console.error('Error updating deliveryStatus and deliveryStatusHistory to shipmentStatus:', error);
     }
 };
