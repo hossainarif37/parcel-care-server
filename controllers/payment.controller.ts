@@ -47,3 +47,17 @@ export const saveTransaction = async (req: Request, res: Response, next: NextFun
         next(error)
     }
 };
+
+
+export const getTransactions = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const transactions = await Transaction.find({});
+        if (transactions.length === 0) {
+            return res.status(404).json({ success: false, message: 'No transactions found' });
+        }
+        res.status(200).json({ success: true, transactions });
+    } catch (error) {
+        console.log('Get Transactions Controller: ', (error as Error).message);
+        next(error);
+    }
+}
