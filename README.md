@@ -59,7 +59,6 @@ Backend service for ParcelCare, a comprehensive parcel delivery management syste
 
 ## 📂 Project Structure
 ```
-src/
 ├── config/
 ├── controllers/
 ├── errorHandlers/
